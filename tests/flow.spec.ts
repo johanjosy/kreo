@@ -96,3 +96,24 @@ test('your own rates change the price and can be reset', async ({ page, isMobile
   const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
   expect(violations.map((v) => `rates: ${v.id} (${v.nodes.length})`)).toEqual([]);
 });
+
+test('deleting the last quote empties the list, and undo brings back exactly one', async ({ page }) => {
+  await page.goto('/');
+  await fill(page, 'Brand name', 'Fieldnote Skincare');
+  await page.getByRole('link', { name: 'Quotes', exact: true }).click();
+  const quotes = page.locator('main ul li');
+  await expect(quotes).toHaveCount(1);
+
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(quotes).toHaveCount(0);
+  await expect(page.getByText('No quotes yet')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(quotes).toHaveCount(1);
+  await expect(quotes).toContainText('Fieldnote Skincare');
+
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await page.waitForTimeout(400); // debounced save
+  await page.reload();
+  await expect(page.getByText('No quotes yet')).toBeVisible();
+});

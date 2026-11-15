@@ -55,6 +55,7 @@ export default function QuotesPage() {
         )}
       </p>
 
+      {state.campaigns.length === 0 && <p className="max-w-[60ch] font-doc text-[22px] leading-relaxed text-quiet">No quotes yet. Start a new one and it will be saved here.</p>}
       <ul className="max-w-[820px] font-ui">
         {state.campaigns.map((c, i) => {
           const r = priceOf(state.profile, c, rates);

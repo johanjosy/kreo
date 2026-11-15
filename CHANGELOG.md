@@ -3,6 +3,11 @@
 Newest first. Records product decisions, architecture changes, milestones and significant fixes.
 Related: [[TASKS]] · [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 
+## 2026-11-15 — Delete fix
+
+### Fixes
+- Deleting the last saved quote didn't remove it: the app immediately replaced it with a blank "Untitled quote", and Undo then added the original back next to it. The quote list can now be empty (with a "No quotes yet" message), Undo restores exactly the deleted quote, and the terms page starts a new quote on the first edit. Regression test added.
+
 ## 2026-11-15 — Blank fields restyled
 
 ### Fixes

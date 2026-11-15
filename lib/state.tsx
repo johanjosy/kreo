@@ -41,21 +41,29 @@ type Action =
   | { type: 'rate'; key: ScalarRate; value: number | null }
   | { type: 'resetRates' };
 
-function active(state: State): Campaign {
+function active(state: State): Campaign | undefined {
   return state.campaigns.find((c) => c.id === state.activeId) ?? state.campaigns[0];
 }
 
+/** Shown on the terms page when every quote has been deleted; the first edit turns it into a real quote. */
+const BLANK: Campaign = { id: '', name: '', brand: '', deliverables: {}, extras: [], usageMonths: 0, exclusivityMonths: 0, revisionRounds: 1, createdAt: '', updatedAt: '' };
+
 function updateActive(state: State, fn: (c: Campaign) => Campaign): State {
   const current = active(state);
+  if (!current) {
+    const c = { ...fn(newCampaign()), updatedAt: now() };
+    return { ...state, campaigns: [c], activeId: c.id };
+  }
   return { ...state, campaigns: state.campaigns.map((c) => (c.id === current.id ? { ...fn(c), updatedAt: now() } : c)) };
 }
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'hydrate': {
-      if (!action.state || action.state.campaigns.length === 0) {
+      // First visit only: start with one blank quote. A saved list that's empty stays empty.
+      if (!action.state) {
         const c = newCampaign();
-        return { ...state, ...(action.state ?? {}), campaigns: [c], activeId: c.id, hydrated: true, loadFailed: action.failed };
+        return { ...state, campaigns: [c], activeId: c.id, hydrated: true, loadFailed: action.failed };
       }
       return { ...state, ...action.state, hydrated: true, loadFailed: action.failed };
     }
@@ -90,11 +98,7 @@ function reducer(state: State, action: Action): State {
       return state.campaigns.some((c) => c.id === action.id) ? { ...state, activeId: action.id } : state;
     case 'remove': {
       const campaigns = state.campaigns.filter((c) => c.id !== action.id);
-      if (campaigns.length === 0) {
-        const c = newCampaign();
-        return { ...state, campaigns: [c], activeId: c.id };
-      }
-      return { ...state, campaigns, activeId: state.activeId === action.id ? campaigns[0].id : state.activeId };
+      return { ...state, campaigns, activeId: state.activeId === action.id ? (campaigns[0]?.id ?? null) : state.activeId };
     }
     case 'formatRate': {
       const ratePer1000 = { ...state.rates?.ratePer1000 };
@@ -112,8 +116,9 @@ function reducer(state: State, action: Action): State {
       return { ...state, rates: {} };
     case 'restore': {
       const campaigns = [...state.campaigns];
+      if (campaigns.some((c) => c.id === action.campaign.id)) return state;
       campaigns.splice(Math.min(action.index, campaigns.length), 0, action.campaign);
-      return { ...state, campaigns };
+      return { ...state, campaigns, activeId: state.activeId ?? action.campaign.id };
     }
   }
 }
@@ -164,7 +169,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('pagehide', flush);
   }, []);
 
-  const campaign = active(state);
+  const campaign = active(state) ?? BLANK;
   const rates = useMemo(() => withOverrides(benchmarks, state.rates), [state.rates]);
   const result = useMemo(() => price(state.profile, campaign, rates), [state.profile, campaign, rates]);
   const value = useMemo(() => ({ state, campaign, result, rates, dispatch }), [state, campaign, result, rates]);
