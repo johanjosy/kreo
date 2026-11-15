@@ -1,6 +1,6 @@
 # KREO — Project Brief
 
-Status: MVP built, pre-deploy · Last updated: 2026-11-15
+Status: MVP live at https://kreoapp.vercel.app · Last updated: 2026-11-15
 Related: [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]] · [[TASKS]] · [[CHANGELOG]]
 
 ## Vision

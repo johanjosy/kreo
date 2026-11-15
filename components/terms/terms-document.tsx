@@ -68,7 +68,7 @@ export function TermsDocument() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => dispatch({ type: 'togglePlatform', platform: p })}
-                className={on ? 'border-b-[1.5px] border-ink bg-[linear-gradient(transparent_58%,var(--mark)_58%)] px-0.5' : 'border-b-[1.5px] border-dashed border-quiet px-0.5 text-quiet hover:text-ink'}
+                className={on ? 'border-b-[1.5px] border-ink bg-mark px-1' : 'border-b-[1.5px] border-dashed border-quiet px-0.5 text-quiet hover:text-ink'}
               >
                 {PLATFORM_NAMES[p]}
               </button>

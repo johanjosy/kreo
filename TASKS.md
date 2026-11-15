@@ -74,7 +74,7 @@ Related: [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 
 ## 7. Deployment
 
-- [ ] R1 GitHub repository and Vercel project — needs: I1
-- [ ] R2 Production deploy — needs: Q1–Q8
-- [ ] R3 Smoke test the production URL (flow + PDF) — needs: R2
-- [ ] R4 Changelog entry for MVP release — needs: R3
+- [x] R1 GitHub repository (public: github.com/johanjosy/kreo) and Vercel project — needs: I1
+- [x] R2 Production deploy: https://kreoapp.vercel.app (Q4–Q6 and Q8 still open) — needs: Q1–Q8
+- [x] R3 Smoke test the production URL (full Playwright suite with `BASE_URL`) — needs: R2
+- [x] R4 Changelog entry for MVP release — needs: R3

@@ -3,6 +3,23 @@
 Newest first. Records product decisions, architecture changes, milestones and significant fixes.
 Related: [[TASKS]] · [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 
+## 2026-11-15 — Blank fields restyled
+
+### Fixes
+- The yellow-green highlighter only covered the lower half of each blank, and in Safari the blanks were sized from a character estimate, so typed text could be cut off. Blanks are now a pale navy box (`#E9EEF8`, deeper `#DDE4F3` while editing) behind the whole text, sized from a hidden copy of the text with the input laid on top. Checked in Chromium and WebKit: no field clips its text.
+
+### Decisions
+- Highlight colour changed to match the white and navy scheme.
+
+## 2026-11-15 — MVP released
+
+### Milestones
+- Live at https://kreoapp.vercel.app, deployed from the public repository https://github.com/johanjosy/kreo through Vercel's GitHub integration; every push to `main` deploys.
+- All 11 browser tests pass against production (flow, PDF download, rates, accessibility on desktop and mobile). Run them with `BASE_URL=https://kreoapp.vercel.app npx playwright test`.
+
+### Decisions
+- Third-party design skills (`.claude/skills/`) are kept out of the public repository: several don't state a licence. The two unpushed commits were rewritten before the first push; the skills remain local.
+
 ## 2026-11-15 — Your rates
 
 ### Milestones

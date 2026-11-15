@@ -1,24 +1,26 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { num, parseNumber } from '@/lib/format';
 
-// Fallback width for browsers without `field-sizing: content` (see globals.css).
-const width = (text: string, min: number) => ({ '--w': `${Math.max(min, text.length + 1)}ch` }) as React.CSSProperties;
+/**
+ * The highlighted box around every blank. It sizes itself to the text it holds: a hidden copy of the text
+ * (CSS `::after` from `data-value`) sits in the same grid cell as the control, so the box always fits what's typed,
+ * in every browser.
+ */
+function Box({ text, minCh, invalid, className = '', children }: { text: string; minCh: number; invalid?: boolean; className?: string; children: ReactNode }) {
+  return (
+    <span className={`blank ${className}`} data-value={text} data-invalid={invalid || undefined} style={{ minWidth: `${minCh}ch` }}>
+      {children}
+    </span>
+  );
+}
 
 export function TextBlank({ value, onChange, label, placeholder, minCh = 6, maxLength = 120 }: { value: string; onChange: (v: string) => void; label: string; placeholder: string; minCh?: number; maxLength?: number }) {
   return (
-    <input
-      className="blank"
-      type="text"
-      value={value}
-      aria-label={label}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      autoComplete="off"
-      style={width(value || placeholder, minCh)}
-      onChange={(e) => onChange(e.target.value)}
-    />
+    <Box text={value || placeholder} minCh={minCh}>
+      <input type="text" value={value} aria-label={label} placeholder={placeholder} maxLength={maxLength} autoComplete="off" onChange={(e) => onChange(e.target.value)} />
+    </Box>
   );
 }
 
@@ -48,8 +50,8 @@ export function NumberBlank({ value, onChange, label, placeholder = '0', min = 0
 
   return (
     <>
+      <Box text={shown || placeholder} minCh={minCh} invalid={invalid} className="figures">
       <input
-        className="blank figures"
         type="text"
         inputMode={decimals ? 'decimal' : 'numeric'}
         value={shown}
@@ -58,7 +60,6 @@ export function NumberBlank({ value, onChange, label, placeholder = '0', min = 0
         aria-describedby={invalid ? errorId : undefined}
         placeholder={placeholder}
         autoComplete="off"
-        style={width(shown || placeholder, minCh)}
         onFocus={() => setDraft(value ? String(value) : '')}
         onChange={(e) => {
           setDraft(e.target.value);
@@ -72,6 +73,7 @@ export function NumberBlank({ value, onChange, label, placeholder = '0', min = 0
           setDraft(null);
         }}
       />
+      </Box>
       {invalid && (
         <span id={errorId} role="alert" className="ml-1 align-middle font-ui text-ui-sm text-error">
           Use {num(min)} to {num(max)}
@@ -84,12 +86,14 @@ export function NumberBlank({ value, onChange, label, placeholder = '0', min = 0
 export function ChoiceBlank<T extends string>({ value, options, onChange, label }: { value: T; options: readonly { value: T; text: string }[]; onChange: (v: T) => void; label: string }) {
   const current = options.find((o) => o.value === value)?.text ?? '';
   return (
-    <select className="blank" value={value} aria-label={label} onChange={(e) => onChange(e.target.value as T)} style={width(current, 4)}>
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.text}
-        </option>
-      ))}
-    </select>
+    <Box text={current} minCh={4}>
+      <select value={value} aria-label={label} onChange={(e) => onChange(e.target.value as T)}>
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.text}
+          </option>
+        ))}
+      </select>
+    </Box>
   );
 }

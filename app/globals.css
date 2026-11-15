@@ -7,7 +7,8 @@
   --quiet: #545d70;
   --note: #1c2d5a;
   --on-note: #ffffff;
-  --mark: #eef5a2;
+  --mark: #e9eef8;
+  --mark-strong: #dde4f3;
   --ask: #9c4508;
   --rule: #d8dce3;
   --estimate-bg: #fff6db;
@@ -24,6 +25,7 @@
   --color-note: var(--note);
   --color-on-note: var(--on-note);
   --color-mark: var(--mark);
+  --color-mark-strong: var(--mark-strong);
   --color-ask: var(--ask);
   --color-rule: var(--rule);
   --color-estimate-bg: var(--estimate-bg);
@@ -59,46 +61,59 @@ body {
   outline-offset: 3px;
 }
 
-/* The inline blank: the core input of the terms document. */
+/* The inline blank: the core input of the terms document. A pale navy box that always fits its text.
+   A hidden copy of the text (::after, from data-value) sets the box's size; the real control is laid over it,
+   so default input and select widths never stretch the box. */
 .blank {
-  font: inherit;
-  color: inherit;
-  background: linear-gradient(transparent 58%, var(--mark) 58%);
-  border: 0;
-  border-bottom: 1.5px solid var(--ink);
-  border-radius: 0;
-  padding: 0 2px;
-  margin: 0 1px;
-  width: var(--w);
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
   max-width: 100%;
-  appearance: none;
-  transition: background-size 120ms var(--ease-settle);
+  margin: 0 1px;
+  /* 2px more on the right than the control's padding: room for the caret after the last character. */
+  padding: 0 6px 0 4px;
+  background: var(--mark);
+  border-bottom: 1.5px solid var(--ink);
+  transition: background-color 120ms var(--ease-settle);
 }
-.blank::placeholder {
+.blank::after {
+  content: attr(data-value);
+  visibility: hidden;
+  white-space: pre;
+}
+.blank > input,
+.blank > select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0 4px;
+  margin: 0;
+  appearance: none;
+  outline: none;
+}
+.blank > select {
+  cursor: pointer;
+}
+.blank > input::placeholder {
   color: var(--quiet);
   opacity: 1;
 }
-.blank:focus {
-  outline: none;
-  background: var(--mark);
+.blank:focus-within {
+  background: var(--mark-strong);
 }
-.blank:focus-visible {
+.blank:has(:focus-visible) {
   outline: 2px solid var(--note);
   outline-offset: 2px;
 }
-.blank[aria-invalid='true'] {
+.blank[data-invalid] {
   border-bottom-color: var(--error);
-}
-@supports (field-sizing: content) {
-  .blank {
-    field-sizing: content;
-    width: auto;
-    min-width: 2ch;
-  }
-}
-select.blank {
-  cursor: pointer;
-  padding-right: 2px;
 }
 
 .figures {

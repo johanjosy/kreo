@@ -39,7 +39,7 @@ Referenced for reasoning, not copied.
 
 ## Colour
 
-Colour comes from the material of the concept: white paper, navy ink like a signed agreement, and a highlighter. No gradients, no tints used as decoration.
+Colour comes from the material of the concept: white paper, navy ink like a signed agreement, and a pale navy tint marking the parts you fill in. No gradients, no tints used as decoration.
 
 ### Palette (light only)
 
@@ -49,7 +49,8 @@ Colour comes from the material of the concept: white paper, navy ink like a sign
 | `ink` | `#131A2E` | Body text, blank underlines | 17.3:1 |
 | `quiet` | `#545D70` | Helper text, labels, walk-away marker | 6.6:1 |
 | `note` | `#1C2D5A` (navy) | Margin note, primary button, target marker | 13.4:1 |
-| `mark` | `#EEF5A2` | Highlight behind blanks only | ink on mark 15.0:1 |
+| `mark` | `#E9EEF8` | Box behind blanks only | ink on mark 14.9:1 |
+| `mark-strong` | `#DDE4F3` | Blank being edited | ink 13.6:1 |
 | `ask` | `#9C4508` | Opening-ask marker | 6.4:1 |
 | `rule` | `#D8DCE3` | Dividers between line items | decorative |
 | `estimate-bg` / `estimate-fg` | `#FFF6DB` / `#7A4F00` | "Estimate, not a guaranteed rate" notices | 6.6:1 |
@@ -117,7 +118,7 @@ Mobile
 
 | Component | Spec |
 | --- | --- |
-| **Blank** (inline input) | Inherits document type. Ink underline 1.5px, `mark` highlight on the lower 42% of the line; full `mark` background on focus. Sizes to its content. Numbers format with thousands separators on blur. Each has an accessible label. Errors appear in `error` beneath the sentence, linked with `aria-describedby`. |
+| **Blank** (inline input) | Inherits document type. A pale navy box (`mark`) behind the whole text with a 1.5px ink underline; `mark-strong` while editing, navy focus ring for keyboard users. The box always fits its text in every browser: a hidden copy of the text sizes it and the real input sits on top. Numbers format with thousands separators on blur. Each has an accessible label. Out-of-range values show an inline `error` message linked with `aria-describedby`. |
 | **Choice blank** | Same look as a blank; opens a native select (desktop) or bottom sheet (mobile) for niche and platform choices. |
 | **Platform toggle** | "I post on [Instagram] [TikTok] [YouTube]": toggles inside the sentence; deselected platforms remove their sentence clauses. |
 | **Margin note** | 1.5px `note` rule on the left, total, range ruler, line items, primary action, estimate caveat. |
@@ -142,7 +143,7 @@ Motion only answers the user's input.
 | --- | --- | --- |
 | Total changes | Figures count to the new value | 240ms ease-out `cubic-bezier(.2,.8,.2,1)` |
 | Range markers move | Slide along the ruler | 240ms, same curve, interruptible |
-| Blank focus | Highlight fills from the underline up | 120ms |
+| Blank focus | Box deepens from `mark` to `mark-strong` | 120ms |
 | Line item expand | Height reveal with fade | 200ms in / 140ms out |
 | Bottom sheet | Slides from the bottom | 280ms in / 180ms out |
 | Clause added/removed (platform toggle) | Fade and reflow | 200ms |
