@@ -1,54 +1,20 @@
 @import 'tailwindcss';
 
-/* Tokens from DESIGN_BRIEF.md. Light is the default; dark follows the system unless the user picked a theme. */
+/* Tokens from DESIGN_BRIEF.md. Light only: KREO is always on a white page, like the quote it produces. */
 :root {
   --paper: #ffffff;
-  --ink: #14231d;
-  --quiet: #55625c;
-  --note: #0e5a43;
+  --ink: #131a2e;
+  --quiet: #545d70;
+  --note: #1c2d5a;
   --on-note: #ffffff;
   --mark: #eef5a2;
   --ask: #9c4508;
-  --rule: #d9dfdb;
+  --rule: #d8dce3;
   --estimate-bg: #fff6db;
   --estimate-fg: #7a4f00;
   --error: #b42318;
-  --scrim: rgb(20 35 29 / 0.4);
+  --scrim: rgb(19 26 46 / 0.4);
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --paper: #0f1a16;
-    --ink: #e8efea;
-    --quiet: #9daaa3;
-    --note: #6fcba5;
-    --on-note: #0f1a16;
-    --mark: #3a4214;
-    --ask: #e8945a;
-    --rule: #3a4a43;
-    --estimate-bg: #2a2410;
-    --estimate-fg: #f2c46d;
-    --error: #f97066;
-    --scrim: rgb(0 0 0 / 0.55);
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme='dark'] {
-  --paper: #0f1a16;
-  --ink: #e8efea;
-  --quiet: #9daaa3;
-  --note: #6fcba5;
-  --on-note: #0f1a16;
-  --mark: #3a4214;
-  --ask: #e8945a;
-  --rule: #3a4a43;
-  --estimate-bg: #2a2410;
-  --estimate-fg: #f2c46d;
-  --error: #f97066;
-  --scrim: rgb(0 0 0 / 0.55);
-  color-scheme: dark;
 }
 
 @theme inline {

@@ -79,3 +79,33 @@ test('engagement bands', () => {
   assert.equal(engagementMultiplier(5.9, b), 1.1);
   assert.equal(engagementMultiplier(40, b), 1.2);
 });
+
+test('benchmarks convert into the creator\'s currency', () => {
+  const c = campaign({ deliverables: { tiktokVideo: 1 }, usageMonths: 0, exclusivityMonths: 0 });
+  const aud = price({ ...maya, currency: 'AUD' }, c, b);
+  const jpy = price({ ...maya, currency: 'JPY' }, c, b);
+  // 31 × €20 × 1.65 AUD/EUR × 1.2 × 1.1 = 1,350.36
+  assert.equal(aud.target, 1350);
+  assert.match(aud.lines[0].explanation, /A\$33 per 1,000/);
+  assert.ok(jpy.target > 100_000, 'yen rates must not stay at euro face value');
+});
+
+test('extras are taken at face value in any currency', () => {
+  const r = price({ ...maya, currency: 'AUD' }, campaign({ deliverables: {}, usageMonths: 0, exclusivityMonths: 0, extras: [{ id: 'e', label: 'Raw footage', price: 300 }] }), b);
+  assert.equal(r.target, 300);
+});
+
+test('creator rate overrides replace the starting rates', async () => {
+  const { withOverrides, hasOverrides } = await import('./rates.ts');
+  const c = campaign({ deliverables: { tiktokVideo: 1 }, usageMonths: 1, exclusivityMonths: 0 });
+  const mine = withOverrides(b, { ratePer1000: { tiktokVideo: 30 }, usagePerMonth: 0.25, floorRatio: 0.9 });
+  const r = price(maya, c, mine);
+  // 31 × €30 × 1.2 × 1.1 = 1,227.6 → 1,228; usage 25% → 307
+  assert.equal(r.lines[0].unit, 1228);
+  assert.equal(r.lines.find((l) => l.kind === 'usage')!.total, 307);
+  assert.equal(r.floor, Math.round((r.target * 0.9) / 10) * 10);
+  assert.equal(b.formats.tiktokVideo.ratePer1000, 20, 'starting benchmarks are not mutated');
+  assert.equal(hasOverrides({}), false);
+  assert.equal(hasOverrides({ ratePer1000: {} }), false);
+  assert.equal(hasOverrides({ anchorRatio: 1.3 }), true);
+});

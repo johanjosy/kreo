@@ -72,3 +72,27 @@ test('no accessibility violations on any page', async ({ page }) => {
     expect(violations.map((v) => `${path}: ${v.id} (${v.nodes.length})`)).toEqual([]);
   }
 });
+
+test('your own rates change the price and can be reset', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'covered on desktop');
+  await writeTerms(page);
+  const margin = page.getByRole('complementary', { name: 'Your rate' });
+  await expect(margin).toContainText('€2,616');
+
+  await page.getByRole('link', { name: 'Rates', exact: true }).click();
+  await fill(page, 'Rate per 1,000 views for each TikTok video', '30');
+  await expect(page.getByText('You changed this. KREO’s starting value is €20.')).toBeVisible();
+
+  await page.getByRole('link', { name: 'Terms', exact: true }).click();
+  // TikToks now 31 × €30 × 1.2 × 1.1 = 1,228 each → 2,456; Reel 639; base 3,095; usage 15% = 464. Target 3,559.
+  await expect(margin).toContainText('€3,559');
+
+  await page.getByRole('link', { name: 'Rates', exact: true }).click();
+  await page.getByRole('button', { name: 'Go back to KREO’s starting rates' }).click();
+  await page.getByRole('link', { name: 'Terms', exact: true }).click();
+  await expect(margin).toContainText('€2,616');
+
+  await page.goto('/rates');
+  const { violations } = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+  expect(violations.map((v) => `rates: ${v.id} (${v.nodes.length})`)).toEqual([]);
+});

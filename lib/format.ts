@@ -21,5 +21,3 @@ export function parseNumber(text: string): number | null {
   const n = Number.parseFloat(cleaned);
   return Number.isFinite(n) ? n : null;
 }
-
-export const CURRENCY_NAMES: Record<Currency, string> = { EUR: 'euros', GBP: 'pounds', USD: 'dollars' };

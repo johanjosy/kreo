@@ -46,3 +46,15 @@ test('storage that throws (private mode) does not crash', () => {
   assert.deepEqual(load(throwing), { status: 'empty' });
   assert.equal(save(throwing, valid), false);
 });
+
+test('accepts newly added currencies such as AUD', () => {
+  const aud = { ...valid, profile: { ...valid.profile, currency: 'AUD' } };
+  assert.equal(parseStored(JSON.stringify(aud)).status, 'ok');
+});
+
+test('saved rate overrides round-trip and are validated', () => {
+  const withRates = { ...valid, rates: { ratePer1000: { tiktokVideo: 25 }, usagePerMonth: 0.2, anchorRatio: 1.3 } };
+  assert.deepEqual(parseStored(JSON.stringify(withRates)), { status: 'ok', state: withRates });
+  assert.equal(parseStored(JSON.stringify({ ...valid, rates: { floorRatio: 1.5 } })).status, 'invalid');
+  assert.equal(parseStored(JSON.stringify({ ...valid, rates: { ratePer1000: { tiktokVideo: -1 } } })).status, 'invalid');
+});

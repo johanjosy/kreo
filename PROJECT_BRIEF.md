@@ -86,7 +86,7 @@ A creator states their terms in plain language and gets:
 | Fact | View-based pricing (rate per 1,000 views) is a common method in published guides; per-follower rules are described as rough approximations. Sources in [[IMPLEMENTATION_PLAN#Pricing methodology]]. |
 | Decision | Direction B "Terms" with the range from direction C (2026-11-15). |
 | Decision | No backend, no auth; browser storage only. |
-| Assumption — approved 2026-11-15 | EUR default currency with a currency picker, no conversion. |
+| Decision — 2026-11-15 | EUR default; 29 common currencies including AUD. Benchmarks are converted from euros with approximate static exchange rates (assumption: ignores local market differences). |
 | Assumption — approved 2026-11-15 | English only for app and quote. |
 | Assumption — approved 2026-11-15 | One creator profile, many saved quotes. |
 | Assumption — approved 2026-11-15 | Starting rate values listed in [[IMPLEMENTATION_PLAN#Pricing methodology]]. |

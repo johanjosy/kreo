@@ -3,6 +3,30 @@
 Newest first. Records product decisions, architecture changes, milestones and significant fixes.
 Related: [[TASKS]] · [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 
+## 2026-11-15 — Your rates
+
+### Milestones
+- New "Your rates" page (`/rates`, in the top bar as "Rates"): creators can change the rate per 1,000 views for each format, the usage, exclusivity and revision percentages, and the walk-away and opening-ask percentages. Each changed value shows KREO's starting value with a one-click reset; "Go back to KREO's starting rates" resets everything.
+- Every price (terms, quote, PDF, quotes list) uses the creator's rates. The estimate notice now says "your rates" and links to the page, closing the gap where it promised editable benchmarks that couldn't be edited.
+
+### Architecture
+- Overrides are stored in euros, like the benchmarks, so they keep their meaning when the currency changes. Saved as optional `rates` in `kreo:v1`; older saved data loads unchanged. Validated with zod (walk-away 50–99%, ask 101–200%).
+- Tests: 20 unit tests, 11 browser tests (new: change a rate, see the total change, reset; axe on `/rates`).
+
+## 2026-11-15 — More currencies
+
+### Decisions
+- Currency picker expanded from 3 to 29 common currencies, including AUD, NZD, CAD, SGD, INR and JPY, listed by name.
+- Benchmarks stay in euros and are converted with approximate static exchange rates (`config/currencies.ts`), so prices aren't wrong by the exchange rate in currencies like yen or rupees. Extras are taken at face value.
+- Assumption flagged: exchange-rate conversion ignores local market differences.
+
+## 2026-11-15 — Brand adjustments
+
+### Decisions
+- Wordmark is now lowercase with a full stop: `kreo.`, set in Newsreader.
+- Accent changed from banknote green to navy (`#1C2D5A`); ink and greys shifted to match (`#131A2E`, `#545D70`, `#D8DCE3`). All text still passes WCAG AA (lowest 6.6:1).
+- Dark mode removed: no theme toggle, always a white page. The screenshot test now runs on a dark-mode device and checks the background stays white.
+
 ## 2026-11-15 — MVP build
 
 ### Milestones

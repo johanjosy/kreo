@@ -87,7 +87,14 @@ function Lines({ result, currency }: { result: PriceResult; currency: Currency }
 }
 
 function Estimate() {
-  return <p className="mt-6 bg-estimate-bg px-3 py-2 font-ui text-ui-sm leading-normal text-estimate-fg">An estimate from your numbers and editable benchmarks, not a guaranteed market rate.</p>;
+  return (
+    <p className="mt-6 bg-estimate-bg px-3 py-2 font-ui text-ui-sm leading-normal text-estimate-fg">
+      An estimate from your numbers and your rates, not a guaranteed market rate.{' '}
+      <Link href="/rates" className="underline underline-offset-2">
+        Change your rates
+      </Link>
+    </p>
+  );
 }
 
 function MissingViews({ result }: { result: PriceResult }) {

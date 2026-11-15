@@ -3,6 +3,8 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import { benchmarks } from '@/config/benchmarks';
 import { price } from './pricing/engine';
+import { withOverrides, type RateOverrides, type ScalarRate } from './pricing/rates';
+import type { Benchmarks } from '@/config/benchmarks';
 import type { Campaign, CreatorProfile, DeliverableKind, Extra, Platform, PlatformStats, PriceResult } from './pricing/types';
 import { load, save, type StoredState } from './storage';
 
@@ -34,7 +36,10 @@ type Action =
   | { type: 'new' }
   | { type: 'select'; id: string }
   | { type: 'remove'; id: string }
-  | { type: 'restore'; campaign: Campaign; index: number };
+  | { type: 'restore'; campaign: Campaign; index: number }
+  | { type: 'formatRate'; kind: DeliverableKind; eurPer1000: number | null }
+  | { type: 'rate'; key: ScalarRate; value: number | null }
+  | { type: 'resetRates' };
 
 function active(state: State): Campaign {
   return state.campaigns.find((c) => c.id === state.activeId) ?? state.campaigns[0];
@@ -91,6 +96,20 @@ function reducer(state: State, action: Action): State {
       }
       return { ...state, campaigns, activeId: state.activeId === action.id ? campaigns[0].id : state.activeId };
     }
+    case 'formatRate': {
+      const ratePer1000 = { ...state.rates?.ratePer1000 };
+      if (action.eurPer1000 == null) delete ratePer1000[action.kind];
+      else ratePer1000[action.kind] = action.eurPer1000;
+      return { ...state, rates: { ...state.rates, ratePer1000 } };
+    }
+    case 'rate': {
+      const rates: RateOverrides = { ...state.rates };
+      if (action.value == null) delete rates[action.key];
+      else rates[action.key] = action.value;
+      return { ...state, rates };
+    }
+    case 'resetRates':
+      return { ...state, rates: {} };
     case 'restore': {
       const campaigns = [...state.campaigns];
       campaigns.splice(Math.min(action.index, campaigns.length), 0, action.campaign);
@@ -103,6 +122,8 @@ interface Store {
   state: State;
   campaign: Campaign;
   result: PriceResult;
+  /** KREO's starting rates with the creator's own rates applied. */
+  rates: Benchmarks;
   dispatch: (a: Action) => void;
 }
 
@@ -126,7 +147,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!state.hydrated) return;
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      save(browserStorage(), { version: 1, profile: state.profile, campaigns: state.campaigns, activeId: state.activeId });
+      save(browserStorage(), { version: 1, profile: state.profile, campaigns: state.campaigns, activeId: state.activeId, rates: state.rates });
     }, 300);
     return () => clearTimeout(timer.current);
   }, [state]);
@@ -137,15 +158,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const flush = () => {
       const s = latest.current;
-      if (s.hydrated) save(browserStorage(), { version: 1, profile: s.profile, campaigns: s.campaigns, activeId: s.activeId });
+      if (s.hydrated) save(browserStorage(), { version: 1, profile: s.profile, campaigns: s.campaigns, activeId: s.activeId, rates: s.rates });
     };
     window.addEventListener('pagehide', flush);
     return () => window.removeEventListener('pagehide', flush);
   }, []);
 
   const campaign = active(state);
-  const result = useMemo(() => price(state.profile, campaign, benchmarks), [state.profile, campaign]);
-  const value = useMemo(() => ({ state, campaign, result, dispatch }), [state, campaign, result]);
+  const rates = useMemo(() => withOverrides(benchmarks, state.rates), [state.rates]);
+  const result = useMemo(() => price(state.profile, campaign, rates), [state.profile, campaign, rates]);
+  const value = useMemo(() => ({ state, campaign, result, rates, dispatch }), [state, campaign, result, rates]);
   return <StoreContext value={value}>{children}</StoreContext>;
 }
 
@@ -155,7 +177,7 @@ export function useStore(): Store {
   return s;
 }
 
-/** Price any saved campaign (used by the quotes list and quote page). */
-export function priceOf(profile: CreatorProfile, c: Campaign) {
-  return price(profile, c, benchmarks);
+/** Price any saved campaign with the creator's rates (used by the quotes list and quote page). */
+export function priceOf(profile: CreatorProfile, c: Campaign, rates: Benchmarks) {
+  return price(profile, c, rates);
 }

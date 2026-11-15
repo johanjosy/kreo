@@ -1,4 +1,5 @@
 import type { Benchmarks } from '../../config/benchmarks.ts';
+import { currencies } from '../../config/currencies.ts';
 import { money, num } from '../format.ts';
 import { DELIVERABLES, type Campaign, type CreatorProfile, type DeliverableKind, type LineItem, type PriceResult } from './types.ts';
 
@@ -17,6 +18,8 @@ const round10 = (n: number) => Math.round(n / 10) * 10;
  */
 export function price(profile: CreatorProfile, campaign: Campaign, b: Benchmarks): PriceResult {
   const cur = profile.currency;
+  // Benchmarks are set in euros; convert them into the creator's currency.
+  const fx = currencies[cur]?.perEur ?? 1;
   const nicheMult = b.niche[profile.niche] ?? 1;
   const lines: LineItem[] = [];
   const missingViews: DeliverableKind[] = [];
@@ -32,14 +35,15 @@ export function price(profile: CreatorProfile, campaign: Campaign, b: Benchmarks
     }
     const views = stats.avgViews * f.viewShare;
     const eng = engagementMultiplier(stats.engagementRate, b);
-    const unit = Math.round((views / 1000) * f.ratePer1000 * eng * nicheMult);
+    const rate = f.ratePer1000 * fx;
+    const unit = Math.round((views / 1000) * rate * eng * nicheMult);
     lines.push({
       kind,
       label: label(kind, count, b),
       count,
       unit,
       total: unit * count,
-      explanation: `${num(Math.round(views))} expected views × ${money(f.ratePer1000, cur)} per 1,000 × ${eng} for engagement × ${nicheMult} for niche`,
+      explanation: `${num(Math.round(views))} expected views × ${money(rate, cur)} per 1,000 × ${eng} for engagement × ${nicheMult} for niche`,
     });
   }
 

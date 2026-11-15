@@ -21,10 +21,10 @@ function registerFonts(origin: string) {
   registered = true;
 }
 
-const ink = '#14231D';
-const quiet = '#55625C';
-const note = '#0E5A43';
-const rule = '#D9DFDB';
+const ink = '#131A2E';
+const quiet = '#545D70';
+const note = '#1C2D5A';
+const rule = '#D8DCE3';
 
 const s = StyleSheet.create({
   page: { paddingTop: 64, paddingBottom: 72, paddingHorizontal: 64, fontFamily: 'Hanken', fontSize: 10, color: ink, lineHeight: 1.5 },

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { CURRENCIES, DELIVERABLES, NICHES, PLATFORMS, type Campaign, type CreatorProfile } from './pricing/types.ts';
+import type { RateOverrides } from './pricing/rates.ts';
 
 export const STORAGE_KEY = 'kreo:v1';
 export const BACKUP_KEY = 'kreo:v1:backup';
@@ -27,11 +28,23 @@ const campaignSchema = z.object({
   updatedAt: z.string(),
 });
 
+const share = z.number().finite().min(0).max(1);
+const ratesSchema = z.object({
+  ratePer1000: z.partialRecord(z.enum(DELIVERABLES), z.number().finite().min(0).max(100_000)).optional(),
+  usagePerMonth: share.optional(),
+  exclusivityPerMonth: share.optional(),
+  revisionRate: share.optional(),
+  floorRatio: z.number().finite().min(0.5).max(0.99).optional(),
+  anchorRatio: z.number().finite().min(1.01).max(2).optional(),
+});
+
 const stateSchema = z.object({
   version: z.literal(1),
   profile: profileSchema,
   campaigns: z.array(campaignSchema).max(500),
   activeId: z.string().nullable(),
+  // Added after the first release; older saved data has no rates and that's fine.
+  rates: ratesSchema.optional(),
 });
 
 export interface StoredState {
@@ -39,6 +52,7 @@ export interface StoredState {
   profile: CreatorProfile;
   campaigns: Campaign[];
   activeId: string | null;
+  rates?: RateOverrides;
 }
 
 export type LoadResult = { status: 'empty' } | { status: 'ok'; state: StoredState } | { status: 'invalid' };

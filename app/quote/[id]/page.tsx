@@ -8,7 +8,7 @@ import { priceOf, useStore } from '@/lib/state';
 
 export default function QuotePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { state, dispatch } = useStore();
+  const { state, rates, dispatch } = useStore();
   const [status, setStatus] = useState<'idle' | 'working' | 'failed'>('idle');
   if (!state.hydrated) return <main id="main" className="min-h-dvh" />;
 
@@ -25,7 +25,7 @@ export default function QuotePage({ params }: { params: Promise<{ id: string }> 
     );
   }
 
-  const result = priceOf(state.profile, campaign);
+  const result = priceOf(state.profile, campaign, rates);
   const q = quoteContent(state.profile, campaign, result);
 
   async function download() {

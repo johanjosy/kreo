@@ -42,9 +42,10 @@ Tests for the pricing engine run with Node's built-in `node --test` (Node 26 run
 ```
 kreo/
 ├── app/
-│   ├── layout.tsx            fonts, theme, top bar
+│   ├── layout.tsx            fonts, top bar
 │   ├── page.tsx              the terms document (main screen)
 │   ├── quote/[id]/page.tsx   quote preview + PDF download
+│   ├── rates/page.tsx        the creator's own rates (overrides of the starting benchmarks)
 │   └── quotes/page.tsx       saved quotes
 ├── components/
 │   ├── terms/                TermsDocument, Blank, ChoiceBlank, PlatformToggle, Clause
@@ -57,7 +58,8 @@ kreo/
 │   ├── state.ts              reducer + context
 │   └── format.ts             currency and number formatting (Intl)
 ├── config/
-│   └── benchmarks.ts         every rate, with source or "assumption" label
+│   ├── benchmarks.ts         every rate (in euros), with source or "assumption" label
+│   └── currencies.ts         supported currencies, names, approximate EUR exchange rates
 ├── tests/                    Playwright specs: flow, screenshots, a11y
 └── explorations/             design prototypes (reference only, not shipped)
 ```
@@ -66,7 +68,7 @@ kreo/
 
 ```
 RootLayout
-├── TopBar (wordmark, Quotes link, ThemeToggle)
+├── TopBar (kreo. wordmark, Terms and Quotes links)
 └── TermsPage
     ├── TermsDocument
     │   ├── Clause: profile      (Blank ×n, ChoiceBlank niche, PlatformToggle)
@@ -98,7 +100,7 @@ interface CreatorProfile {
   name: string;
   niche: Niche;
   platforms: Partial<Record<Platform, PlatformStats>>; // only platforms the creator uses
-  currency: 'EUR' | 'GBP' | 'USD';                     // display only, no conversion
+  currency: Currency;                                  // 29 common currencies, see config/currencies.ts
 }
 
 interface Campaign {
@@ -147,7 +149,15 @@ opening ask  = target × anchor ratio
 
 Every line carries a plain-language explanation built from these numbers. If a platform's views are missing, its deliverables are disabled with a prompt to add them; followers alone are never used to invent views.
 
-### Starting values (all in `config/benchmarks.ts`, all editable)
+### Currency
+
+Benchmarks are set in euros. When a creator prices in another currency, rates per 1,000 views are converted with a static, approximate exchange rate in `config/currencies.ts` (set 2026-11-15). Extras are taken at face value in the creator's currency. **Assumption:** converting at the exchange rate ignores local market differences, so converted rates are a starting point; refresh the rates periodically.
+
+### Creator's own rates
+
+Every starting value below can be changed on the Rates page. Changes are stored as overrides (`lib/pricing/rates.ts`, rates per 1,000 views in euros) and merged over the benchmarks with `withOverrides`; the engine itself is unchanged.
+
+### Starting values (all in `config/benchmarks.ts`, all editable on the Rates page)
 
 | Value | Starting point | Status |
 | --- | --- | --- |

@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { benchmarks } from '@/config/benchmarks';
 import { label } from '@/lib/pricing/engine';
 import { CURRENCIES, DELIVERABLES, PLATFORMS, type Currency, type DeliverableKind, type Niche, type Platform } from '@/lib/pricing/types';
-import { CURRENCY_NAMES } from '@/lib/format';
+import { currencies } from '@/config/currencies';
 import { useStore } from '@/lib/state';
 import { ChoiceBlank, NumberBlank, TextBlank } from './blanks';
 
@@ -24,7 +24,7 @@ const NICHE_OPTIONS: { value: Niche; text: string }[] = [
   { value: 'education', text: 'education' },
   { value: 'other', text: 'other' },
 ];
-const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, text: CURRENCY_NAMES[c] }));
+const CURRENCY_OPTIONS = CURRENCIES.map((c) => ({ value: c, text: currencies[c].name })).sort((a, b) => a.text.localeCompare(b.text));
 
 /** Join clauses as "a, b and c". */
 function joinClauses(parts: ReactNode[]): ReactNode {

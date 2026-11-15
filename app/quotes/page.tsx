@@ -10,7 +10,7 @@ import { priceOf, useStore } from '@/lib/state';
 const dateFormat = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 
 export default function QuotesPage() {
-  const { state, dispatch } = useStore();
+  const { state, rates, dispatch } = useStore();
   const router = useRouter();
   const [removed, setRemoved] = useState<{ campaign: Campaign; index: number } | null>(null);
   if (!state.hydrated) return <main id="main" className="min-h-dvh" />;
@@ -57,7 +57,7 @@ export default function QuotesPage() {
 
       <ul className="max-w-[820px] font-ui">
         {state.campaigns.map((c, i) => {
-          const r = priceOf(state.profile, c);
+          const r = priceOf(state.profile, c, rates);
           const title = [c.brand.trim(), c.name.trim()].filter(Boolean).join(', ') || 'Untitled quote';
           return (
             <li key={c.id} className="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-6 gap-y-1 border-t border-rule py-4">

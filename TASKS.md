@@ -54,13 +54,17 @@ Related: [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 - [x] F8 PDF spike: static fonts in react-pdf — needs: I4
 - [x] F9 Quote PDF and download — needs: F7, F8
 - [x] F10 Saved quotes list (open, view, delete with undo). Duplicate not built yet — needs: C5
-- [x] F11 Dark mode and theme toggle — needs: I3
+- [x] F11 ~~Dark mode and theme toggle~~ Removed 2026-11-15: light only, by decision — needs: I3
 - [x] F12 Motion: totals, markers, sheet, reduced motion — needs: F5, F6
+- [x] F13 Your rates page: edit every starting rate, per-value and full reset — needs: C2
+- [x] F14 29 currencies with converted benchmarks — needs: C2
+- [ ] F15 Default currency from the visitor's browser region
+- [ ] F16 Back up quotes to a file and restore them
 
 ## 6. Quality assurance
 
 - [x] Q1 End-to-end test of the main flow — needs: F9
-- [x] Q2 Screenshots at 375 / 768 / 1280 / 1440, light and dark, no overflow — needs: F11
+- [x] Q2 Screenshots at 375 / 768 / 1280 / 1440, white page even on dark-mode devices, no overflow — needs: F11
 - [x] Q3 axe WCAG 2.2 AA on all routes — needs: F10
 - [ ] Q4 Impeccable critique and fixes (detector clean on pages and source) — needs: Q2
 - [ ] Q5 UI UX Pro Max pre-delivery checklist — needs: Q2

@@ -9,7 +9,7 @@ export interface FormatBenchmark {
   platform: Platform;
   /** Singular and plural labels used in sentences, line items and the quote. */
   label: { one: string; other: string };
-  /** Currency units per 1,000 expected views. */
+  /** Euros per 1,000 expected views; converted to the creator's currency with config/currencies.ts. */
   ratePer1000: number;
   /** Expected views for this format as a share of the platform's average views. */
   viewShare: number;

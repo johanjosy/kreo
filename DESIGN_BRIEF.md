@@ -39,39 +39,23 @@ Referenced for reasoning, not copied.
 
 ## Colour
 
-Colour comes from the material of the concept: paper, ink, a highlighter, and the green of banknotes and signed agreements. No gradients, no tints used as decoration.
+Colour comes from the material of the concept: white paper, navy ink like a signed agreement, and a highlighter. No gradients, no tints used as decoration.
 
-### Light (default)
+### Palette (light only)
 
 | Token | Hex | Role | Contrast on paper |
 | --- | --- | --- | --- |
 | `paper` | `#FFFFFF` | Page and document | — |
-| `ink` | `#14231D` | Body text, blank underlines | 16.3:1 |
-| `quiet` | `#55625C` | Helper text, labels, walk-away marker | 6.4:1 |
-| `note` | `#0E5A43` | Margin note, primary button, target marker | 8.2:1 |
-| `mark` | `#EEF5A2` | Highlight behind blanks only | ink on mark 14.2:1 |
+| `ink` | `#131A2E` | Body text, blank underlines | 17.3:1 |
+| `quiet` | `#545D70` | Helper text, labels, walk-away marker | 6.6:1 |
+| `note` | `#1C2D5A` (navy) | Margin note, primary button, target marker | 13.4:1 |
+| `mark` | `#EEF5A2` | Highlight behind blanks only | ink on mark 15.0:1 |
 | `ask` | `#9C4508` | Opening-ask marker | 6.4:1 |
-| `rule` | `#D9DFDB` | Dividers between line items | decorative |
+| `rule` | `#D8DCE3` | Dividers between line items | decorative |
 | `estimate-bg` / `estimate-fg` | `#FFF6DB` / `#7A4F00` | "Estimate, not a guaranteed rate" notices | 6.6:1 |
 | `error` | `#B42318` | Validation messages | 6.6:1 |
 
-### Dark
-
-Designed together with light, not inverted.
-
-| Token | Hex | Contrast on paper |
-| --- | --- | --- |
-| `paper` | `#0F1A16` | — |
-| `ink` | `#E8EFEA` | 15.2:1 |
-| `quiet` | `#9DAAA3` | 7.4:1 |
-| `note` | `#6FCBA5` (button text `#0F1A16`) | 9.1:1 |
-| `mark` | `#3A4214` | ink on mark 9.1:1 |
-| `ask` | `#E8945A` | 7.5:1 |
-| `rule` | `#3A4A43` | decorative |
-| `estimate-fg` | `#F2C46D` | 10.9:1 |
-| `error` | `#F97066` | 6.4:1 |
-
-Theme follows the system setting, with a manual toggle remembered in browser storage. The PDF is always light.
+No dark mode: the app is always on a white page, like the quote it produces, and stays white on devices set to dark mode (decided 2026-11-15).
 
 ## Typography
 
@@ -80,6 +64,7 @@ Two families, clearly distinct in role.
 | Role | Typeface | Why |
 | --- | --- | --- |
 | Document (the sentence, totals, quote) | **Newsreader** (variable, optical sizing) | A text serif designed for reading on screen; optical sizing keeps large totals elegant and small text sturdy; lining figures for money |
+| Wordmark | **Newsreader** medium, lowercase with a full stop: `kreo.` | A signature, not a logo badge: it reads like the end of a sentence in the terms document |
 | Interface (labels, buttons, helper text, line items) | **Hanken Grotesk** | Quiet, open grotesque that stays out of the document's way |
 
 Both free on Google Fonts, loaded with `next/font` (self-hosted, no layout shift).
@@ -107,7 +92,7 @@ Rules: sentence case everywhere; no all-caps labels; no monospace; money in News
 ```
 Desktop
 ┌───────────────────────────────────────────────────────────┐
-│ KREO                                   Quotes   Theme     │
+│ kreo.                           Terms   Rates   Quotes    │
 │                                                           │
 │ I'm [Maya Okafor], and I make     │ Your rate             │
 │ [skincare] videos. My videos      │ €3,410                │
@@ -119,7 +104,7 @@ Desktop
 
 Mobile
 ┌─────────────────────┐
-│ KREO                │
+│ kreo.               │
 │ I'm [Maya Okafor],  │
 │ and I make …        │
 │                     │
@@ -147,7 +132,7 @@ Corners: 2px on buttons and sheets, 0 elsewhere. No shadows except the bottom sh
 
 ## Navigation
 
-Top bar only: wordmark, "Quotes", theme toggle. Three routes: the terms document, a quote preview, the saved quotes list. No sidebar, no tabs.
+Top bar only: the `kreo.` wordmark, "Terms", "Rates" and "Quotes". The Rates page uses the same sentence-with-blanks pattern as the terms document. Four routes: the terms document, the creator's rates, a quote preview, the saved quotes list. No sidebar, no tabs.
 
 ## Motion
 
@@ -174,4 +159,4 @@ Plain, direct, first person in the document ("I'll make…"), second person in t
 
 ## Avoid
 
-Gradients, glass effects, card grids, decorative illustrations, emoji, all-caps labels, monospace labels, middle-dot meta strings, arrows appended to button text, cream backgrounds, terracotta accents, more than one primary button per screen.
+Dark mode, gradients, glass effects, card grids, decorative illustrations, emoji, all-caps labels, monospace labels, middle-dot meta strings, arrows appended to button text, cream backgrounds, terracotta accents, more than one primary button per screen.

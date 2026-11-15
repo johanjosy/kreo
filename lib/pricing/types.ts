@@ -7,7 +7,10 @@ export type Niche = (typeof NICHES)[number];
 export const DELIVERABLES = ['tiktokVideo', 'igReel', 'igStory', 'igPost', 'youtubeVideo'] as const;
 export type DeliverableKind = (typeof DELIVERABLES)[number];
 
-export const CURRENCIES = ['EUR', 'GBP', 'USD'] as const;
+export const CURRENCIES = [
+  'AED', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'IDR', 'ILS', 'INR', 'JPY',
+  'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'SAR', 'SEK', 'SGD', 'THB', 'TRY', 'USD', 'ZAR',
+] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
 export interface PlatformStats {
