@@ -6,7 +6,10 @@ Related: [[TASKS]] · [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_
 ## 2026-11-15 — Favicon
 
 ### Milestones
-- Favicon and Apple touch icon: the "k." mark in Newsreader, white on a navy tile so it reads on light and dark browser tabs. Generated at build time from the bundled font (`app/icon.tsx`, `app/apple-icon.tsx`, `lib/brand-icon.tsx`); the Apple icon is square because iOS rounds it.
+- Favicon and Apple touch icon: the "k." mark in Newsreader, white on a navy tile so it reads on light and dark browser tabs. The Apple icon is square because iOS rounds it.
+
+### Fixes
+- The first favicon rendered live text into a small PNG: blurry, and centred on the text box rather than the letters, so "k." sat off-centre. It's now the letters' actual outlines (`lib/brand-mark.ts`, extracted from the font) centred on their ink, served as a sharp SVG (`app/icon.svg`) with a 64px PNG fallback (`app/icon1.tsx`) and the Apple icon drawn from the same outline.
 
 ## 2026-11-15 — Delete fix
 

@@ -1,5 +1,6 @@
 import { brandIcon } from '@/lib/brand-icon';
 
+// PNG fallback for browsers that don't use SVG favicons; app/icon.svg is the sharp version.
 export const size = { width: 64, height: 64 };
 export const contentType = 'image/png';
 
