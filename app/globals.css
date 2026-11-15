@@ -1,0 +1,166 @@
+@import 'tailwindcss';
+
+/* Tokens from DESIGN_BRIEF.md. Light is the default; dark follows the system unless the user picked a theme. */
+:root {
+  --paper: #ffffff;
+  --ink: #14231d;
+  --quiet: #55625c;
+  --note: #0e5a43;
+  --on-note: #ffffff;
+  --mark: #eef5a2;
+  --ask: #9c4508;
+  --rule: #d9dfdb;
+  --estimate-bg: #fff6db;
+  --estimate-fg: #7a4f00;
+  --error: #b42318;
+  --scrim: rgb(20 35 29 / 0.4);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #0f1a16;
+    --ink: #e8efea;
+    --quiet: #9daaa3;
+    --note: #6fcba5;
+    --on-note: #0f1a16;
+    --mark: #3a4214;
+    --ask: #e8945a;
+    --rule: #3a4a43;
+    --estimate-bg: #2a2410;
+    --estimate-fg: #f2c46d;
+    --error: #f97066;
+    --scrim: rgb(0 0 0 / 0.55);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #0f1a16;
+  --ink: #e8efea;
+  --quiet: #9daaa3;
+  --note: #6fcba5;
+  --on-note: #0f1a16;
+  --mark: #3a4214;
+  --ask: #e8945a;
+  --rule: #3a4a43;
+  --estimate-bg: #2a2410;
+  --estimate-fg: #f2c46d;
+  --error: #f97066;
+  --scrim: rgb(0 0 0 / 0.55);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-quiet: var(--quiet);
+  --color-note: var(--note);
+  --color-on-note: var(--on-note);
+  --color-mark: var(--mark);
+  --color-ask: var(--ask);
+  --color-rule: var(--rule);
+  --color-estimate-bg: var(--estimate-bg);
+  --color-estimate-fg: var(--estimate-fg);
+  --color-error: var(--error);
+  --font-doc: var(--font-newsreader), Georgia, serif;
+  --font-ui: var(--font-hanken), system-ui, sans-serif;
+  --text-ui-sm: 13px;
+  --text-ui: 15px;
+  --text-ui-lg: 16px;
+  --ease-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--mark);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--note);
+  outline-offset: 3px;
+}
+
+/* The inline blank: the core input of the terms document. */
+.blank {
+  font: inherit;
+  color: inherit;
+  background: linear-gradient(transparent 58%, var(--mark) 58%);
+  border: 0;
+  border-bottom: 1.5px solid var(--ink);
+  border-radius: 0;
+  padding: 0 2px;
+  margin: 0 1px;
+  width: var(--w);
+  max-width: 100%;
+  appearance: none;
+  transition: background-size 120ms var(--ease-settle);
+}
+.blank::placeholder {
+  color: var(--quiet);
+  opacity: 1;
+}
+.blank:focus {
+  outline: none;
+  background: var(--mark);
+}
+.blank:focus-visible {
+  outline: 2px solid var(--note);
+  outline-offset: 2px;
+}
+.blank[aria-invalid='true'] {
+  border-bottom-color: var(--error);
+}
+@supports (field-sizing: content) {
+  .blank {
+    field-sizing: content;
+    width: auto;
+    min-width: 2ch;
+  }
+}
+select.blank {
+  cursor: pointer;
+  padding-right: 2px;
+}
+
+.figures {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+@keyframes sheet {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

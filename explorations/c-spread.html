@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KREO direction C: Spread</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ground:#EEF0F2;--surface:#FFFFFF;--ink:#16191D;--quiet:#535B64;--floor:#535B64;--target:#0A6464;--anchor:#9C4508;--tick:#C5CAD0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"Schibsted Grotesk",sans-serif}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 16px 64px}
+header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:40px;font-size:14px;color:var(--quiet)}
+header b{color:var(--ink);font-weight:800;font-size:18px;letter-spacing:.06em}
+.hero{background:var(--surface);padding:32px 32px 28px;margin-bottom:2px}
+.hero h1{font-size:16px;font-weight:500;margin:0 0 4px;color:var(--quiet)}
+.hero .big{font-size:clamp(48px,9vw,104px);font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--target)}
+.ruler{position:relative;height:116px;margin-top:28px}
+.ticks{position:absolute;inset:auto 0 32px 0;height:16px;background:repeating-linear-gradient(90deg,var(--tick) 0 1px,transparent 1px 10%)}
+.ticks::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink)}
+.band{position:absolute;bottom:32px;height:16px;background:color-mix(in srgb,var(--target) 14%,transparent);transition:left .35s cubic-bezier(.2,.8,.2,1),width .35s cubic-bezier(.2,.8,.2,1)}
+.pin{position:absolute;bottom:32px;width:0;transition:left .35s cubic-bezier(.2,.8,.2,1)}
+.pin::before{content:"";position:absolute;left:-1px;bottom:0;width:2px;height:44px;background:currentColor}
+.pin span{position:absolute;bottom:52px;transform:translateX(-50%);white-space:nowrap;font-size:13px;font-weight:600;}
+.pin.target span{bottom:74px}.pin.floor{color:var(--floor)}.pin.target{color:var(--target)}.pin.anchor{color:var(--anchor)}
+.scale{position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:space-between;font-size:12px;color:var(--quiet);font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:2px}
+.panel{background:var(--surface);padding:24px 32px}
+.panel h2{font-size:16px;font-weight:600;margin:0 0 16px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td{padding:10px 0;border-top:1px solid var(--ground);font-size:15px}
+td:last-child{text-align:right}
+.step{display:inline-flex;align-items:center;gap:4px}
+.step button{width:36px;height:36px;border:1px solid var(--tick);background:var(--surface);color:var(--ink);font:500 18px "Schibsted Grotesk";cursor:pointer;border-radius:2px}
+.step output{min-width:2ch;text-align:center;font-weight:600}
+.mix{display:flex;height:28px;margin:4px 0 16px;gap:2px}
+.mix i{display:block;transition:flex-grow .35s cubic-bezier(.2,.8,.2,1)}
+.legend{list-style:none;padding:0;margin:0;font-size:14px}
+.legend li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center;padding:7px 0;font-variant-numeric:tabular-nums}
+.legend li i{width:12px;height:12px}
+.note{font-size:13px;color:var(--quiet);line-height:1.5;margin:16px 0 0}
+:focus-visible{outline:2px solid var(--target);outline-offset:2px}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}.hero,.panel{padding:20px 16px}.pin span{font-size:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><b>KREO</b><span>Maya Okafor for Fieldnote Skincare</span></header>
+  <section class="hero" aria-live="polite">
+    <h1>Your target rate</h1>
+    <div class="big" id="big"></div>
+    <div class="ruler" aria-hidden="true">
+      <div class="ticks"></div><div class="band" id="band"></div>
+      <div class="pin floor" id="pFloor"><span></span></div>
+      <div class="pin target" id="pTarget"><span></span></div>
+      <div class="pin anchor" id="pAnchor"><span></span></div>
+      <div class="scale" id="scale"></div>
+    </div>
+  </section>
+  <div class="grid">
+    <section class="panel"><h2>Deliverables and terms</h2><table id="rows"></table></section>
+    <section class="panel"><h2>Where the money comes from</h2><div class="mix" id="mix" aria-hidden="true"></div><ul class="legend" id="legend"></ul>
+      <p class="note">Walk-away is 80% of target, opening ask is 125%. Every rate is an editable estimate, not a guaranteed market value.</p></section>
+  </div>
+</div>
+<script src="engine.js"></script>
+<script>
+const { formats, quote, money } = KREO;
+const state = { avgViews: 31000, engagement: 6.2, niche: 'beauty', deliverables: { tiktok: 2, reel: 1, youtube: 0, story: 3, post: 0 }, usageMonths: 1, exclusivityMonths: 1, revisions: 1 };
+const controls = [...Object.keys(formats).map((k) => ({ k, label: formats[k].label, get: () => state.deliverables[k], set: (v) => (state.deliverables[k] = v), min: 0 })),
+  { k: 'usage', label: 'Paid usage, months', get: () => state.usageMonths, set: (v) => (state.usageMonths = v), min: 0 },
+  { k: 'excl', label: 'Exclusivity, months', get: () => state.exclusivityMonths, set: (v) => (state.exclusivityMonths = v), min: 0 },
+  { k: 'rev', label: 'Revision rounds', get: () => state.revisions, set: (v) => (state.revisions = v), min: 1 }];
+const rows = document.getElementById('rows');
+rows.innerHTML = controls.map((c, i) => `<tr><td id="l${i}">${c.label}</td><td><span class="step"><button aria-label="Fewer: ${c.label}" data-i="${i}" data-d="-1">−</button><output id="o${i}"></output><button aria-label="More: ${c.label}" data-i="${i}" data-d="1">+</button></span></td></tr>`).join('');
+rows.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const c = controls[b.dataset.i]; c.set(Math.max(c.min, Math.min(12, c.get() + +b.dataset.d))); render(); });
+const shades = ['#0A6464', '#2E8585', '#5FA3A3', '#93C2C2', '#C4DEDE', '#9C4508', '#C77A3E', '#535B64'];
+function render() {
+  const q = quote(state);
+  controls.forEach((c, i) => (document.getElementById('o' + i).textContent = c.get()));
+  document.getElementById('big').textContent = money(q.target);
+  const max = Math.max(5000, Math.ceil((q.anchor * 1.15) / 1000) * 1000);
+  const pct = (v) => (v / max) * 100 + '%';
+  for (const [id, v] of [['pFloor', q.floor], ['pTarget', q.target], ['pAnchor', q.anchor]]) { const p = document.getElementById(id); p.style.left = pct(v); p.querySelector('span').textContent = { pFloor: 'Walk-away ', pTarget: 'Target ', pAnchor: 'Ask ' }[id] + money(v); }
+  const band = document.getElementById('band'); band.style.left = pct(q.floor); band.style.width = ((q.anchor - q.floor) / max) * 100 + '%';
+  document.getElementById('scale').innerHTML = [0, 0.25, 0.5, 0.75, 1].map((f) => `<span>${money(max * f)}</span>`).join('');
+  const parts = [...q.lines.map((l) => [l.count + ' × ' + l.label, l.total]), ['Paid usage', q.usage], ['Exclusivity', q.exclusivity], ['Extra revisions', q.revisions]].filter((p) => p[1] > 0);
+  document.getElementById('mix').innerHTML = parts.map((p, i) => `<i style="flex-grow:${p[1]};background:${shades[i % shades.length]}"></i>`).join('');
+  document.getElementById('legend').innerHTML = parts.map((p, i) => `<li><i style="background:${shades[i % shades.length]}"></i><span>${p[0]}</span><span>${money(p[1])}</span></li>`).join('');
+}
+render();
+</script>
+</body>
+</html>

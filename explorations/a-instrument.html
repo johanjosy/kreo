@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KREO direction A: Instrument</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root{--body:#D7D8D3;--panel:#E9EAE6;--graphite:#232427;--etch:#505256;--groove:#BFC1BB;--level:#FFC21A;--cap:#F7F7F4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--body);color:var(--graphite);font-family:Archivo,sans-serif;font-variation-settings:"wdth" 100}
+.deck{max-width:1180px;margin:0 auto;padding:28px 16px 120px;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px}
+header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 8px}
+.mark{font-weight:800;font-size:22px;font-variation-settings:"wdth" 125;letter-spacing:.02em}
+.who{font-size:14px;color:var(--etch)}
+.strips{background:var(--panel);border-radius:6px;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:2px;box-shadow:inset 0 0 0 1px var(--groove)}
+.strip{padding:12px 10px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;border-right:1px solid var(--groove)}
+.strip:last-child{border-right:0}
+.strip h2{margin:0;font-size:13px;font-weight:600;font-variation-settings:"wdth" 70;text-align:center;line-height:1.2;min-height:32px}
+.count{font-size:44px;font-weight:700;font-variation-settings:"wdth" 62;font-variant-numeric:tabular-nums;line-height:1}
+.step{display:flex;gap:6px}
+.step button{width:44px;height:44px;border-radius:50%;border:1px solid var(--groove);background:var(--cap);font:600 20px Archivo;color:var(--graphite);cursor:pointer;box-shadow:0 2px 0 var(--groove);transition:transform .08s,box-shadow .08s}
+.step button:active{transform:translateY(2px);box-shadow:0 0 0 var(--groove)}
+.unit{font-size:12px;color:var(--etch);font-variant-numeric:tabular-nums}
+.rights{grid-column:1;background:var(--panel);border-radius:6px;padding:20px 24px;box-shadow:inset 0 0 0 1px var(--groove);display:grid;gap:18px}
+.fader{display:grid;grid-template-columns:150px minmax(0,1fr) 72px;align-items:center;gap:16px}
+.fader label{font-size:14px;font-weight:600;font-variation-settings:"wdth" 75}
+.fader output{font-variant-numeric:tabular-nums;text-align:right;font-size:15px;font-weight:600}
+input[type=range]{appearance:none;width:100%;height:6px;background:var(--groove);border-radius:3px;margin:0}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:22px;height:34px;border-radius:3px;background:var(--cap);border:1px solid #9A9C97;box-shadow:inset 0 -14px 0 -12px var(--graphite),0 2px 0 #9A9C97;cursor:grab}
+input[type=range]::-moz-range-thumb{width:22px;height:34px;border-radius:3px;background:var(--cap);border:1px solid #9A9C97}
+.master{grid-row:2/4;grid-column:2;background:var(--graphite);color:var(--cap);border-radius:6px;padding:24px;display:flex;flex-direction:column;gap:20px;position:sticky;top:16px;align-self:start}
+.master h2{margin:0;font-size:13px;font-weight:500;color:#A9ABA6;font-variation-settings:"wdth" 75}
+.price{font-size:64px;font-weight:700;font-variation-settings:"wdth" 62;font-variant-numeric:tabular-nums;line-height:.9}
+.meter{display:grid;grid-template-columns:28px 1fr;gap:12px;height:220px}
+.leds{display:flex;flex-direction:column-reverse;gap:3px}
+.leds i{flex:1;border-radius:1px;background:#3A3B3F;transition:background .12s}
+.leds i.on{background:var(--level)}
+.marks{display:flex;flex-direction:column;justify-content:space-between;font-size:13px;font-variant-numeric:tabular-nums}
+.marks span{display:flex;justify-content:space-between;color:#A9ABA6}
+.marks span b{color:var(--cap);font-weight:600}
+.cta{background:var(--level);color:var(--graphite);border:0;border-radius:4px;height:48px;font:700 15px Archivo;font-variation-settings:"wdth" 90;cursor:pointer}
+.note{font-size:12px;color:#A9ABA6;line-height:1.5;margin:0}
+:focus-visible{outline:3px solid var(--graphite);outline-offset:2px}
+.master :focus-visible{outline-color:var(--level)}
+@media (max-width:860px){.deck{grid-template-columns:minmax(0,1fr)}.master{grid-column:1;grid-row:auto;position:fixed;inset:auto 0 0 0;top:auto;border-radius:12px 12px 0 0;flex-direction:row;align-items:center;justify-content:space-between;padding:14px 16px;gap:12px;z-index:5}.master h2,.meter,.note{display:none}.price{font-size:40px}.cta{padding:0 18px}.fader{grid-template-columns:1fr 64px}.fader input{grid-column:1/-1;grid-row:2}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="deck">
+  <header><span class="mark">KREO</span><span class="who">Maya Okafor, skincare. 31,000 average views, 6.2% engagement</span></header>
+  <section class="strips" aria-label="Deliverables" id="strips"></section>
+  <section class="rights" aria-label="Rights and terms">
+    <div class="fader"><label for="usage">Paid usage</label><input id="usage" type="range" min="0" max="12" value="1"><output for="usage" id="usageOut"></output></div>
+    <div class="fader"><label for="excl">Category exclusivity</label><input id="excl" type="range" min="0" max="12" value="1"><output for="excl" id="exclOut"></output></div>
+    <div class="fader"><label for="rev">Revision rounds</label><input id="rev" type="range" min="1" max="4" value="1"><output for="rev" id="revOut"></output></div>
+  </section>
+  <aside class="master" aria-live="polite">
+    <h2>Fieldnote Skincare, spring launch</h2>
+    <div class="price" id="price"></div>
+    <div class="meter" aria-hidden="true"><div class="leds" id="leds"></div><div class="marks"><span>Opening ask <b id="anchor"></b></span><span>Target <b id="target"></b></span><span>Walk-away <b id="floor"></b></span></div></div>
+    <button class="cta">Build quote</button>
+    <p class="note">An estimate from your numbers and editable benchmarks. Not a guaranteed market rate.</p>
+  </aside>
+</main>
+<script src="engine.js"></script>
+<script>
+const { formats, quote, money } = KREO;
+const state = { avgViews: 31000, engagement: 6.2, niche: 'beauty', deliverables: { tiktok: 2, reel: 1, youtube: 0, story: 3, post: 0 }, usageMonths: 1, exclusivityMonths: 1, revisions: 1 };
+const strips = document.getElementById('strips');
+for (const key of Object.keys(formats)) {
+  strips.insertAdjacentHTML('beforeend', `<div class="strip"><h2 id="h-${key}">${formats[key].label}</h2><div class="count" id="c-${key}"></div><div class="step"><button aria-label="Remove one ${formats[key].label}" data-k="${key}" data-d="-1">−</button><button aria-label="Add one ${formats[key].label}" data-k="${key}" data-d="1">+</button></div><div class="unit" id="u-${key}"></div></div>`);
+}
+strips.addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const k = b.dataset.k; state.deliverables[k] = Math.max(0, Math.min(9, state.deliverables[k] + +b.dataset.d)); render(); });
+for (const [id, field] of [['usage', 'usageMonths'], ['excl', 'exclusivityMonths'], ['rev', 'revisions']]) document.getElementById(id).addEventListener('input', (e) => { state[field] = +e.target.value; render(); });
+const leds = document.getElementById('leds'); for (let i = 0; i < 24; i++) leds.append(document.createElement('i'));
+function render() {
+  const q = quote(state);
+  for (const key of Object.keys(formats)) {
+    document.getElementById('c-' + key).textContent = state.deliverables[key];
+    const l = q.lines.find((x) => x.key === key);
+    document.getElementById('u-' + key).textContent = l ? money(l.unit) + ' each' : 'Not included';
+  }
+  document.getElementById('usageOut').textContent = state.usageMonths ? state.usageMonths + ' mo' : 'None';
+  document.getElementById('exclOut').textContent = state.exclusivityMonths ? state.exclusivityMonths + ' mo' : 'None';
+  document.getElementById('revOut').textContent = state.revisions + (state.revisions === 1 ? ' round' : ' rounds');
+  document.getElementById('price').textContent = money(q.target);
+  for (const k of ['floor', 'target', 'anchor']) document.getElementById(k).textContent = money(q[k]);
+  const lit = Math.round(Math.min(1, q.target / 12000) * 24);
+  [...leds.children].forEach((el, i) => el.classList.toggle('on', i < lit));
+}
+render();
+</script>
+</body>
+</html>
