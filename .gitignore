@@ -9,3 +9,6 @@ screenshots/
 next-env.d.ts
 .DS_Store
 .vercel
+
+# Third-party design skills: local tooling, not redistributed (Emil's can be reinstalled from skills-lock.json)
+.claude/skills/
