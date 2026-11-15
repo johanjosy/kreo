@@ -3,6 +3,11 @@
 Newest first. Records product decisions, architecture changes, milestones and significant fixes.
 Related: [[TASKS]] · [[PROJECT_BRIEF]] · [[DESIGN_BRIEF]] · [[IMPLEMENTATION_PLAN]]
 
+## 2026-11-15 — Favicon
+
+### Milestones
+- Favicon and Apple touch icon: the "k." mark in Newsreader, white on a navy tile so it reads on light and dark browser tabs. Generated at build time from the bundled font (`app/icon.tsx`, `app/apple-icon.tsx`, `lib/brand-icon.tsx`); the Apple icon is square because iOS rounds it.
+
 ## 2026-11-15 — Delete fix
 
 ### Fixes

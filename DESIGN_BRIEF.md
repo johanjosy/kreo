@@ -65,7 +65,7 @@ Two families, clearly distinct in role.
 | Role | Typeface | Why |
 | --- | --- | --- |
 | Document (the sentence, totals, quote) | **Newsreader** (variable, optical sizing) | A text serif designed for reading on screen; optical sizing keeps large totals elegant and small text sturdy; lining figures for money |
-| Wordmark | **Newsreader** medium, lowercase with a full stop: `kreo.` | A signature, not a logo badge: it reads like the end of a sentence in the terms document |
+| Wordmark and icon | **Newsreader** medium, lowercase with a full stop: `kreo.`; the favicon is `k.` in white on a navy (`note`) tile | A signature, not a logo badge: it reads like the end of a sentence in the terms document |
 | Interface (labels, buttons, helper text, line items) | **Hanken Grotesk** | Quiet, open grotesque that stays out of the document's way |
 
 Both free on Google Fonts, loaded with `next/font` (self-hosted, no layout shift).
